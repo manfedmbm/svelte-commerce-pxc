@@ -84,7 +84,8 @@ onMount(async () => {
 		class="group relative col-span-1 block w-full sm:shrink-0 rounded bg-white shadow-effect overflow-hidden sm:overflow-visible
 		{product_image_dimension == '16x9' ? 'md:w-[420px]' : 'sm:w-[210px]'}"
 		on:mouseenter="{showitems}"
-		on:mouseleave="{hideitems}">
+		on:mouseleave="{hideitems}"
+		role="feed">
 		<a
 			href="/product/{product.slug}"
 			rel="noopener noreferrer"
