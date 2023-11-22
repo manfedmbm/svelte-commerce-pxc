@@ -343,7 +343,9 @@ function handleFilterTags() {
 	<div class="mb-10 flex flex-col items-start sm:mb-20 lg:flex-row lg:gap-10 lg:p-10">
 		{#if data.products.facets}
 			<DesktopFilter
-				class="sticky hidden lg:block {$page.data?.store?.hellobar?.active?.val ? 'top-32' : 'top-24'}"
+				class="sticky hidden lg:block {$page.data?.store?.hellobar?.active?.val
+					? 'top-32'
+					: 'top-24'}"
 				facets="{data.products.facets}"
 				priceRange="{priceRange}"
 				query="{data.query}"
@@ -371,8 +373,6 @@ function handleFilterTags() {
 							{/if}
 
 							<p>
-								-
-
 								{#if data.products.count}
 									{data.products.count}
 								{:else}
@@ -409,9 +409,9 @@ function handleFilterTags() {
 				<!-- Products -->
 
 				<ul
-					class="lg:mt-5 grid grid-cols-2 items-start border-t sm:flex sm:flex-wrap sm:justify-between sm:gap-3 sm:border-t-0 lg:gap-6">
+					class="lg:mt-5 grid grid-cols-1 place-items-center border-t flex flex-wrap justify-between gap-3 border-t-0 lg:gap-6">
 					{#each data.products?.products as p, px}
-						<li in:fly="{{ y: 20, duration: 300, delay: 100 * px }}">
+						<li class="w-[50%]" in:fly="{{ y: 20, duration: 300, delay: 100 * px }}">
 							<ProductCard product="{p}" />
 						</li>
 

@@ -47,7 +47,7 @@ if (product?._source) {
 
 let isWislisted = false
 let loadingForWishlist = false
-let product_image_dimension = $page.data.store?.product_image_dimension || '3x4'
+let product_image_dimension = '1x1'
 let ribbonTags = []
 let show = false
 let showRelatedProducts = false
@@ -81,8 +81,8 @@ onMount(async () => {
 
 {#if product}
 	<div
-		class="group relative col-span-1 block w-full sm:shrink-0 rounded bg-white shadow-effect overflow-hidden sm:overflow-visible
-		{product_image_dimension == '16x9' ? 'md:w-[420px]' : 'sm:w-[210px]'}"
+		class="flex flex-row group relative block w-full sm:shrink-0 rounded bg-white shadow-effect overflow-hidden sm:overflow-visible
+		{product_image_dimension == '16x9' ? 'md:w-[420px]' : 'sm:w-[w-full]'}"
 		on:mouseenter="{showitems}"
 		on:mouseleave="{hideitems}"
 		role="feed">
@@ -91,10 +91,10 @@ onMount(async () => {
 			rel="noopener noreferrer"
 			aria-label="Click to view the product details"
 			data-sveltekit-preload-data="tap"
-			class="flex flex-col items-center">
+			class="flex items-center">
 			<!-- New and Tags -->
 
-			{#if ribbonTags?.length || product?.new}
+			<!-- {#if ribbonTags?.length || product?.new}
 				<div class="absolute z-10 top-1 left-1 flex flex-col gap-0.5">
 					{#if product.new}
 						<div
@@ -113,7 +113,7 @@ onMount(async () => {
 						{/each}
 					{/if}
 				</div>
-			{/if}
+			{/if} -->
 
 			{#if product_image_dimension == '1x1'}
 				{#if product.img || (product.images && product.images[0])}
@@ -122,7 +122,7 @@ onMount(async () => {
 						alt="{product.name}"
 						height="210"
 						aspect_ratio="1:1"
-						class="object-contain object-bottom w-[210px] h-[210px] text-xs rounded" />
+						class="object-contain object-bottom w-[60px] h-[60px] text-xs rounded" />
 				{:else}
 					<div
 						class="w-[210px] h-[210px] bg-zinc-100 flex flex-col items-center justify-center p-5 text-zinc-500 text-xs text-center">
@@ -465,8 +465,7 @@ onMount(async () => {
 					<!-- </div> -->
 
 					<div class="flex gap-2 justify-between">
-						<h4
-							class="flex-1 text-xs sm:text-sm font-normal text-zinc-500 line-clamp-2 w-full group-hover:underline">
+						<h4 class="flex-1 text-xs sm:text-sm font-normal w-full group-hover:underline">
 							{product.name || '_'}
 						</h4>
 
@@ -482,10 +481,12 @@ onMount(async () => {
 					</div>
 				</a>
 
+				<div class="text-sm text-zinc-500">
+					{product?.slug}
+				</div>
+
 				{#if $page?.data?.store?.isMultiVendor && product?.vendor && product?.vendor?.slug && product?.vendor?.businessName}
 					<div class="flex items-center gap-1 text-xs sm:text-sm text-zinc-500">
-						<span> By </span>
-
 						<a
 							href="/store/{product?.vendor?.slug}"
 							class="block w-full truncate font-semibold hover:text-zinc-800 capitalize">
@@ -496,12 +497,12 @@ onMount(async () => {
 			</div>
 			<!-- {/if} -->
 
-			{#if product.price}
+			<!-- {#if product.price}
 				<a
 					href="/product/{product.slug}"
 					aria-label="Click to view the product details"
 					data-sveltekit-preload-data>
-					<!-- Price, MRP and Discount -->
+
 
 					{#if product.price}
 						<div
@@ -526,7 +527,7 @@ onMount(async () => {
 						</div>
 					{/if}
 				</a>
-			{/if}
+			{/if} -->
 		</div>
 	</div>
 
