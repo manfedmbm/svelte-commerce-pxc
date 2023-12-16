@@ -27,23 +27,44 @@ import {
 	ProductGridShowCase,
 	ShopYourStone
 } from '$lib/components'
+import { Autocomplete } from '$lib/components'
+import { goto, invalidateAll } from '$app/navigation'
+import { createEventDispatcher, onMount } from 'svelte'
 import { page } from '$app/stores'
 import { slide } from 'svelte/transition'
 import PincodeInputBox from '$lib/themes/misiki/PincodeInputBox.svelte'
 import Skeleton from '$lib/ui/Skeleton.svelte'
-import { onMount } from 'svelte'
 import { browser } from '$app/environment'
 import { storeStore } from '$lib/store/store'
 
 export let data
 export let showFooter = false
 export let showPinCodeEntryModal = false
+
+const dispatch = createEventDispatcher()
+
 let store = {}
 onMount(() => {
 	if (browser) {
 		storeStore.subscribe((value) => (store = value))
 	}
 })
+
+async function onSearchSubmit({ detail }) {
+	let newUrl
+
+	if (detail.type === 'category') {
+		const u = new URL(`/${detail.slug}`, $page.data.origin)
+		newUrl = u.toString()
+	} else {
+		const u = new URL('/search', $page.data.origin)
+		u.searchParams.set('q', detail?.name)
+		newUrl = u.toString()
+	}
+
+	goto(newUrl)
+	dispatch('search', detail)
+}
 </script>
 
 <div class="bg-opacity-25 bg-center bg-repeat min-h-screen">
@@ -62,15 +83,16 @@ onMount(() => {
 			{/if}
 		{/await}
 
-		<!-- Main slider banner -->
+		<!-- search field -->
 
-		{#await data.streamed.home}
-			<div class="h-96 w-full bg-zinc-200 animate-pulse"></div>
-		{:then home}
-			<Hero
-				sliderBannersDesktop="{home.page?.sliderBanners?.banners}"
-				sliderBannersMobile="{home.page?.sliderBanners?.bannersMobile}" />
-		{/await}
+		<div>
+			<h1 class="mt-4 mb-4 text-center">Product Search</h1>
+			<div class="w-1/2 mx-auto">
+				<Autocomplete
+					placeholder="{$page?.data?.store?.searchbarText || 'Search...'}"
+					on:search="{onSearchSubmit}" />
+			</div>
+		</div>
 
 		<!-- Alert message -->
 
@@ -146,24 +168,6 @@ onMount(() => {
 
 		<!-- Hero banners -->
 
-		{#await data.streamed.home}
-			<div class="p-3 py-5 md:py-10 grid grid-cols-2 items-center gap-2 md:grid-cols-4">
-				<div class="col-span-2 h-40 animate-pulse rounded bg-zinc-200 sm:h-60"></div>
-
-				<div class="col-span-2 h-40 animate-pulse rounded bg-zinc-200 sm:h-60"></div>
-
-				<div class="col-span-1 h-40 animate-pulse rounded bg-zinc-200 sm:h-60"></div>
-
-				<div class="col-span-1 h-40 animate-pulse rounded bg-zinc-200 sm:h-60"></div>
-
-				<div class="col-span-2 h-40 animate-pulse rounded bg-zinc-200 sm:h-60"></div>
-			</div>
-		{:then home}
-			{#if home.page?.heroBanners?.banners?.length}
-				<HeroBanners heroBanners="{home?.page?.heroBanners?.banners}" />
-			{/if}
-		{/await}
-
 		<!-- Picked banners -->
 
 		{#await data.streamed.home}
@@ -224,11 +228,11 @@ onMount(() => {
 
 		<!-- Popular products -->
 
-		<PopularProductsHome data="{data}" />
+		<PopularProductsHome {data} />
 
 		<!-- Trending products -->
 
-		<TrendingProductsHome data="{data}" />
+		<TrendingProductsHome {data} />
 
 		<!-- Trending products -->
 		<!-- Note: Write the categories with comma separation -->
@@ -236,11 +240,11 @@ onMount(() => {
 
 		<!-- Collections Home -->
 
-		<CollectionsHome data="{data}" />
+		<CollectionsHome {data} />
 
 		<!-- Collections Home 2 -->
 
-		<CollectionsHome2 data="{data}" />
+		<CollectionsHome2 {data} />
 
 		<!-- Shop your stone -->
 
@@ -250,7 +254,7 @@ onMount(() => {
 
 		<!-- Customer feedback -->
 
-		<CustomerFeedback data="{data}" />
+		<CustomerFeedback {data} />
 
 		<!-- Legal Footer Information -->
 
